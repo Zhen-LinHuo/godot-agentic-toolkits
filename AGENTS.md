@@ -66,5 +66,63 @@ See `language-programming-skills` (Gitea: alrcatraz) for per-language skill defi
 
 ## Git Workflow
 
-- This repository uses **standard git collaboration workflow** (feature branches, PRs)
-- See CONTRIBUTING.md for detailed workflow
+This repository follows a **strict PR-based workflow**. Direct pushes to `main` are
+forbidden — all changes go through feature branches → PR → merge.
+
+### Branch Strategy
+
+```
+main       ← PR merges only (protected via convention)
+develop    ← daily development, branch here for new work
+<type>/<description>  ← feature/fix branches from develop
+```
+
+| Branch | Purpose | Push policy |
+|--------|---------|------------|
+| `main` | Stable release, consumed by ~/.hermes-dev/repos/ | PR merge only |
+| `develop` | Active development, integration branch | Free push |
+| `<type>/<desc>` | Individual features/fixes | Free push, PR into develop → main |
+
+### Workflow
+
+```text
+1. git checkout develop && git pull
+2. git checkout -b <type>/<description>     # e.g. feat/add-tunnel-auth
+3. Commit with Conventional Commits format
+4. git push origin <type>/<description>
+5. Create PR from branch → develop (or main for releases)
+6. After merge: switch to develop, pull, delete local branch
+```
+
+### Commit Conventions (Conventional Commits)
+
+```
+<type>: <imperative description, lowercase, ≤72 chars>
+```
+
+- Types: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`, `perf`, `ci`
+- One commit = one logical change — if you need `and`/`also` in the title, split
+- Body explains WHY (root cause, context), not WHAT (diff shows that)
+- No "Phase X" labels in commit messages
+
+### Dual-Copy Pattern
+
+```
+~/Projects/hermes-dev/<repo>/     → develop copy (pushes to remote)
+~/.hermes-dev/repos/<repo>/       → private copy (tracks main, never pushes)
+```
+
+After a PR merges to main:
+```bash
+cd ~/.hermes-dev/repos/<repo>
+git pull origin main
+```
+
+### Git Identity
+
+This repo uses per-repository identity, not global:
+
+```bash
+git config user.name "Zhen-LinHuo"
+git config user.email "zhenlinhuo@gmx.com"
+```
