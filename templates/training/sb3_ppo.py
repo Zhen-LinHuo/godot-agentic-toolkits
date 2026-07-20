@@ -9,10 +9,10 @@ If --env_path is omitted, Godot editor mode is used
 """
 
 import argparse
-from godot_rl.core.godot_env import GodotEnv
+from godot_rl.wrappers.stable_baselines_wrapper import StableBaselinesGodotEnv
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import EvalCallback
-from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,14 +43,14 @@ def main() -> None:
     args = parse_args()
 
     # Create environment
-    env = GodotEnv(
+    env = StableBaselinesGodotEnv(
         env_path=args.env_path,
         seed=args.seed,
         show_window=args.viz,
     )
 
     # Wrap for SB3 monitoring
-    env = Monitor(env)
+    env = VecMonitor(env)
 
     # Define policy — adjust based on observation space
     model = PPO(
