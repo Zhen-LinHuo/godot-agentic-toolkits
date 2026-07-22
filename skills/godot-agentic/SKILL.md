@@ -9,6 +9,10 @@ tags:
   - scene-editing
   - csharp
   - gdscript
+references:
+  - references/godot-csharp-api.md
+  - references/mcp-tools-quickref.md
+  - references/godot-cli-cheatsheet.md
 triggers:
   - godot
   - game development

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  # ── 4.1: Skill Content Validation ──
+  skill-validation:
+    name: Validate SKILL.md
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install pyyaml
+      - name: Validate skills
+        run: python3 scripts/validate-skills.py
+
+  # ── 4.2: Shellcheck ──
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./scripts"
+        env:
+          SHELLCHECK_OPTS: -s bash -e SC1091,SC2155
+
+  # ── 4.3: Godot .NET Project Build ──
+  dotnet-build:
+    name: Godot .NET Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Install Godot workload
+        run: |
+          dotnet workload install godot
+        continue-on-error: true
+      - name: Restore NuGet packages
+        run: |
+          cd tests/godot-dotnet-template
+          dotnet restore
+      - name: Build
+        run: |
+          cd tests/godot-dotnet-template
+          dotnet build --no-restore
