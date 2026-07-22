@@ -1,0 +1,10 @@
+; Engine configuration file.
+; Godot 4.6.2+ .NET build.
+
+[application]
+config/name="GodotDotnetTemplate"
+config/features=PackedStringArray("4.6", "C#")
+config/icon="res://icon.svg"
+
+[dotnet]
+project="GodotDotnetTemplate.csproj"
