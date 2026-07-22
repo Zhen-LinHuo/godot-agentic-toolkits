@@ -9,7 +9,11 @@ tags:
   - MARL
   - multi-agent
   - training
-  - SB3
+  - sb3
+references:
+  - references/cleanrl-template.py
+  - references/samplefactory-template.py
+  - references/multi-agent-tutorial.md
 triggers:
   - reinforcement learning
   - MARL
@@ -130,15 +134,18 @@ python examples/stable_baselines3_example.py
 
 ```python
 # train_sb3.py — minimal training script
-from godot_rl.core.godot_env import GodotEnv
+from godot_rl.wrappers.stable_baselines_wrapper import StableBaselinesGodotEnv
 from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 
 def train():
-    env = GodotEnv(
+    env = StableBaselinesGodotEnv(
         env_path="path/to/game.x86_64",  # or None for editor
         seed=42,
-        show_window=False                 # headless for speed
+        show_window=False,                 # headless for speed
+        n_parallel=1,                      # parallel env instances
     )
+    env = VecMonitor(env)
 
     model = PPO(
         "MultiInputPolicy",

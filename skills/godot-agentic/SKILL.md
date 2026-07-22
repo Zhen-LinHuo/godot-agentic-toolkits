@@ -9,6 +9,10 @@ tags:
   - scene-editing
   - csharp
   - gdscript
+references:
+  - references/godot-csharp-api.md
+  - references/mcp-tools-quickref.md
+  - references/godot-cli-cheatsheet.md
 triggers:
   - godot
   - game development
@@ -143,89 +147,180 @@ godot --path /path/to/project --debug
 
 ## MCP Tool Usage Patterns
 
+> **Note:** All MCP tool parameters use **camelCase** (e.g. `projectPath`, `scenePath`, `rootNodeType`).
+> `projectPath` is an **absolute filesystem path** to the Godot project directory (not a `res://` path).
+
 ### Scene Management
 
-```bash
-# Create a new scene
-create_scene(path="res://scenes/main.tscn", root_type="Node2D")
+```json
+// Create a new scene
+create_scene(projectPath="/home/user/projects/MyGame",
+             scenePath="scenes/main.tscn",
+             rootNodeType="Node2D")
 
-# Add a node to an existing scene
-add_node(scene_path="res://scenes/main.tscn", parent_path=".", 
-         node_type="Sprite2D", node_name="Player", properties={...})
+// Add a node to an existing scene
+add_node(projectPath="/home/user/projects/MyGame",
+         scenePath="scenes/main.tscn",
+         parentNodePath=".",
+         nodeType="Sprite2D",
+         nodeName="Player",
+         properties={"texture": "res://assets/player.png"})
 
-# Read scene structure
-read_scene(scene_path="res://scenes/main.tscn")
+// Read scene structure as JSON
+read_scene(projectPath="/home/user/projects/MyGame",
+           scenePath="scenes/main.tscn")
 
-# Modify node properties in a scene file
-modify_scene_node(scene_path="res://scenes/main.tscn",
-                  node_path="Player",
+// Modify node properties in a scene file
+modify_scene_node(projectPath="/home/user/projects/MyGame",
+                  scenePath="scenes/main.tscn",
+                  nodePath="Player",
                   properties={"position": Vector2(100, 200)})
+
+// Save scene (optionally as variant)
+save_scene(projectPath="/home/user/projects/MyGame",
+           scenePath="scenes/main.tscn",
+           newPath="scenes/main_variant.tscn")
+
+// Attach a script to a scene node
+attach_script(projectPath="/home/user/projects/MyGame",
+              scenePath="scenes/main.tscn",
+              nodePath="Player",
+              scriptPath="res://scripts/player.gd")
 ```
 
 ### Project Management
 
-```bash
-# Create a new C# project
-create_project(path="/home/user/projects/MyGame", project_name="MyGame",
+```json
+// Create a new C# Godot project
+create_project(projectPath="/home/user/projects/MyGame",
+               projectName="MyGame",
                dotnet=true)
 
-# Get project info (includes isDotnet field)
-get_project_info(path="/home/user/projects/MyGame")
+// Get project info (reports isDotnet field)
+get_project_info(projectPath="/home/user/projects/MyGame")
 
-# Create a C# script
-create_csharp_script(path="/home/user/projects/MyGame",
-                     script_name="PlayerController",
-                     inherits="CharacterBody2D")
+// Create a C# script
+create_csharp_script(projectPath="/home/user/projects/MyGame",
+                     scriptPath="scripts/PlayerController.cs",
+                     className="PlayerController",
+                     baseClass="CharacterBody2D",
+                     methods=["_Ready", "_Process"])
 
-# Validate GDScript syntax
-validate_script(path="/home/user/projects/MyGame/scripts/player.gd")
+// Create a GDScript file
+create_script(projectPath="/home/user/projects/MyGame",
+              scriptPath="scripts/enemy.gd",
+              content="extends Node2D\nfunc _ready():\n    pass")
+
+// Validate GDScript syntax
+validate_script(projectPath="/home/user/projects/MyGame",
+                scriptPath="scripts/player.gd")
+
+// Batch-validate all changed GDScript files
+validate_scripts(projectPath="/home/user/projects/MyGame")
+
+// Read/manage project settings
+read_project_settings(projectPath="/home/user/projects/MyGame")
+modify_project_settings(projectPath="/home/user/projects/MyGame",
+                        section="application/config",
+                        key="name",
+                        value="MyGame")
+
+// List files in project
+list_project_files(projectPath="/home/user/projects/MyGame",
+                   extension=".gd")
+```
+
+### Editor & Export
+
+```json
+// Launch Godot editor for a project
+launch_editor(projectPath="/home/user/projects/MyGame")
+
+// Run the project
+run_project(projectPath="/home/user/projects/MyGame")
+
+// Stop the running project
+stop_project()
+
+// Manage export presets
+manage_export_presets(projectPath="/home/user/projects/MyGame",
+                      action="list")
+
+// Export project
+export_project(projectPath="/home/user/projects/MyGame",
+               presetName="Linux/X11",
+               outputPath="/tmp/build/MyGame.x86_64")
+
+// Manage editor plugins
+manage_plugins(projectPath="/home/user/projects/MyGame",
+               action="list")
 ```
 
 ### Runtime Interaction (Game Running)
 
-```bash
-# Execute GDScript in running game
-game_eval(code="get_tree().current_scene.name")
+```json
+// Execute GDScript in running game (use "return" for values)
+game_eval(code="return get_tree().current_scene.name")
 
-# Get scene tree
+// Get scene tree structure
 game_get_scene_tree()
 
-# Get/modify property on a runtime node
-game_get_property(node_path="/root/Main/Player", property="position")
-game_set_property(node_path="/root/Main/Player", property="position",
+// Get/modify property on a runtime node
+game_get_property(nodePath="/root/Main/Player",
+                  property="position")
+game_set_property(nodePath="/root/Main/Player",
+                  property="position",
                   value=Vector3(10, 0, 5))
 
-# Get performance metrics
+// Call a method on a runtime node
+game_call_method(nodePath="/root/Main/Player",
+                 method="take_damage",
+                 args=[10])
+
+// Get performance metrics
 game_performance()
 
-# Pause/resume
+// Pause/resume
 game_pause(paused=true)
 
-# Capture screenshot
+// Capture screenshot
 game_screenshot()
+
+// Connect/disconnect signals at runtime
+game_connect_signal(nodePath="/root/Main/Player",
+                    signalName="health_changed",
+                    targetPath="/root/Main/UI",
+                    method="on_health_changed")
+
+// Get runtime logs and errors
+game_get_errors()
+game_get_logs()
 ```
 
----
+### Common Workflows
 
-## Common Workflows
-
-### Starting a New Godot C# Project
+#### Starting a New Godot C# Project
 
 ```
-1. create_project(path=..., name=..., dotnet=true)
-     → scaffolds .csproj + feature flag
-2. create_csharp_script(name="Main", inherits="Node2D")
-     → generates partial class template
-3. create_scene(name="main.tscn", root_type="Node2D")
-4. attach_script(scene="main.tscn", node_path=".", script_path="res://scripts/main.gd")
+1. create_project(projectPath="...", projectName="...", dotnet=true)
+     → scaffolds directory + .csproj + C# feature flag
+2. create_csharp_script(projectPath="...", scriptPath="scripts/Main.cs",
+                         className="Main", baseClass="Node2D")
+     → generates C# partial class
+3. create_scene(projectPath="...", scenePath="scenes/main.tscn",
+                 rootNodeType="Node2D")
+4. attach_script(projectPath="...", scenePath="scenes/main.tscn",
+                  nodePath=".", scriptPath="res://scripts/Main.cs")
 ```
 
-### Project Export Pipeline
+#### Project Export Pipeline
 
 ```
-1. manage_export_presets → configure target platforms
-2. export_project(preset="Linux/X11") → headless export
-3. Verify output
+1. manage_export_presets(projectPath="...", action="list")  → check presets
+2. manage_export_presets(projectPath="...", action="add", presetName="Linux/X11")
+3. export_project(projectPath="...", presetName="Linux/X11",
+                  outputPath="/tmp/build/MyGame.x86_64")
+4. Verify output file exists
 ```
 
 ---
