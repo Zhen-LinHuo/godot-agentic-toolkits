@@ -9,7 +9,11 @@ tags:
   - MARL
   - multi-agent
   - training
-  - SB3
+  - sb3
+references:
+  - references/cleanrl-template.py
+  - references/samplefactory-template.py
+  - references/multi-agent-tutorial.md
 triggers:
   - reinforcement learning
   - MARL
