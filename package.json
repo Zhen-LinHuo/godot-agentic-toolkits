@@ -1,0 +1,13 @@
+{
+    "title": "Godot Agentic Toolkits",
+    "description": "AI-assisted Godot development toolkit with MCP integration, multi-agent RL training templates (SB3/CleanRL/SampleFactory), and C# skill references. Designed for remote device workflows.",
+    "category": "tools",
+    "godot_version": "4.6",
+    "version": "1.0.0",
+    "author": "Zhen-LinHuo",
+    "donate": "https://github.com/sponsors/Zhen-LinHuo",
+    "issues": "https://github.com/Zhen-LinHuo/godot-agentic-toolkits/issues",
+    "repository": "https://github.com/Zhen-LinHuo/godot-agentic-toolkits",
+    "license": "MIT",
+    "tags": ["ai", "mcp", "reinforcement-learning", "csharp", "multi-agent", "tools"]
+}
