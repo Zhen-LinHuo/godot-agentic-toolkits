@@ -28,3 +28,6 @@ node_modules/
 .godot/
 import/
 *.godot.meta
+
+# Device-specific configs (never push)
+configs/device-*.sh
