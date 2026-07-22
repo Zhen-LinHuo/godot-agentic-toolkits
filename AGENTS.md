@@ -16,9 +16,12 @@ godot-agentic-toolkits/
 ├── scripts/          # Shell/setup scripts
 ├── templates/        # Project scaffolding
 ├── configs/          # MCP + SSH config samples
-├── docs/             # Documentation
+├── docs/             # Architecture and workflow docs
 └── AGENTS.md         # This file
 ```
+
+> See `docs/ARCHITECTURE.md` for multi-device remote architecture,
+> connection patterns, and operation routing.
 
 ## Skill Architecture (3-Layer)
 
