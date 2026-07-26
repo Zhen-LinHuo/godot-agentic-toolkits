@@ -3,6 +3,8 @@
 > This document defines the project's architecture for AI-assisted Godot
 > development across remote devices. It describes concepts and patterns,
 > not specific infrastructure.
+>
+> For a shorter summary, see [docs/wiki/Architecture.md](../docs/wiki/Architecture.md).
 
 ---
 
